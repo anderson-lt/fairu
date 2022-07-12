@@ -1,0 +1,175 @@
+= Archivo de configuración de Fairú
+
+Este documento describe la estructura del archivo de configuración de Fairú.
+
+Fairú se diseñó para ser una utilidad para ordenar archivos muy flexible y
+rápida, además de ser muy fácil de configurar.
+
+La configuración utiliza YAML como formato, lo que permite una sintaxis muy
+clara y comprensible.
+
+La configuración se divide en dos grandes secciones:
+
+. Opciones de configuración: Aquí puedes ajustar opciones ajenas al
+ordenamiento de los archivos; como los colores de la terminal o el uso de
+CPUS.
+
+. Organización de archivos: Aquí se define la manera en que son tratados los
+archivos.
+
+== Opciones de configuración
+
+// TODO(anderson-lt): Describir esta parte.
+
+== Organización de archivos
+
+Este sistema se basa en un lenguaje de instrucciones simples y bien definidas:
+
+La estructura se basa en un sistema de filtros y acciones; si un filtro no es
+superado, se intenta con el siguiente...
+
+.Demostración del flujo de ejecución.
+----
+Grupo 1:
+  Filtro 1: Argumentos...
+  Filtro 2: Argumentos...
+  Acción: Argumentos...
+
+Grupo 2:
+  Filtro: Argumentos...
+  Acción: Argumentos...
+
+Grupo 3:
+  Filtro: Argumentos...
+  Acción 1: Argumentos...
+  Acción 2: Argumentos...
+----
+El archivo pasa por el _Grupo 1_, si logra pasar todos sus filtros, se aplican
+las acciones definidas en este grupo, de so contrario, se intenta con el
+_Grupo 2_, si pasa su filtro, se ejecuta la acción definida, si no logra pasar
+su filtro, se intenta con el _Grupo 3_ de la misma forma que los anteriores;
+si se llega al final de todos los grupos sin pasar los filtros necesarios, se
+ignora el archivo.
+
+=== Lista de filtros
+
+Un filtro se compone de una clave de diccionario YAML indicando el filtro a
+usar, opcionalmente los filtros pueden tener una versión negada, la cual se 
+utiliza al añadir un caracter `!` al final del nombre.
+
+== Por nombre
+
+Estos filtros se basan únicamente en el nombre del archivo:
+
+Name::
+Este filtro aceptará todos los archivos que contengan el nombre
+especificado, también acepta una versión negada, en cuyo caso *no* dejará
+pasar a los archivos que contengan el nombre indicado.
++
+.Sintaxis de `Name`.
+----
+Name: NombreDeArchivo
+Name:
+  - Archivo1
+  - Archivo2
+Name: [Archivo1, Archivo2]
+----
+
+// TODO(anderson-lt): Hacer esto más detallado.
+Glob::
+Este filtro aceptará todos los archivos que coincidan con los «Unix Shell
+Glob» proveídos.
+Su versión negada rechazará los archivos coincidentes.
+
+Pattern::
+Similar a `Glob`, pero acepta una expresión regular.
+
+== Por tipo
+
+Type::
+Este filtro acepta todos los archivos que sean del hipo especificado.
+Su versión negada rechazará todos los archivos del hipo especificado.
+
+Identifier::
+Este filtro acepta todos los archivos que tengan los «números mágicos»
+especificados.
+Su versión negada hará lo contrario.
+
+== Por tamaño
+
+Size::
+Este filtro aceptará todos los archivos que tengan el mismo tamaño
+especificado, o uno mayor.
+Cuando es negado, aceptará los archivos que tengan un peso menor.
+
+Consumes::
+Este filtro acepta exactamente dos argumentos, ambos refiriéndose a tamaño de
+archivo, esto es para especificar un rango de tamaño (inclusive), para aceptar
+archivos.
+Su versión negada, aceptará los archivos que no estén en el rango de peso.
+
+=== Lista de acciones
+// TODO(anderson-lt): Añadir formato.
+//Copy # Copia lo que sea.
+//CopyDir
+//CopyFile
+//
+//Move
+//MoveDir
+//MoveFile
+//
+//Delete
+//DeleteFile
+//DeleteDir
+//
+//# Miscélanea:
+//If:
+//  - null # Condición
+//  - null # Hacer si es cierto
+//If!: null # If negado.
+//
+//# Negación
+//False:
+//True!:
+//# Verdad.
+//  True:
+//  False!:
+//
+//# Registro.
+//Print: Hola Mundo # go's: fmt.Println
+//Write: Hola Mundo # go's: fmt.Print
+//Report: # go's: log.Println
+//Error: # go's: log.Print
+//
+//# Salida (requiere código).
+//Return: normal
+//Exit: normal
+//
+//# Shell regex (aplican reglas de fish shell).
+//Shell: command args
+//System: raw shell
+//
+//# Funcohes.
+//Function: # Practicamente puedes añadir lo que deses aqui.
+//  - Basura
+//  - &MyFunc MyFunc:  # La idea es añadir referencias YAML aquí.
+//    #Cmds....
+//  - &ref Log:
+//      Print: Hola Mundo.
+//      Show: version
+//
+//# Aunque puedes soltar la referencia directamente, la idea es usar call para
+//# mayor clariad.
+//    Call: *anyRef
+//
+//# Recurse mira la recursión en base al directorio actual.
+//    Recurse: int # Si es mayor a int, fallar.
+//    Recurse!: int # Si es menor, fallar.
+//
+//
+//
+//Operation Title:
+//  - Type: python
+//  - Glob!: '*.py'
+//  - Delete:
+//  - Call: *ref # Ejemplo de call.
