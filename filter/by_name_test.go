@@ -4,7 +4,7 @@ import "testing"
 
 func TestName(t *testing.T) {
 	// Data for testing.
-	var filenames = [...]string{
+	filenames := [...]string{
 		// Correct results (with Image.png).
 		"Image.png",
 		"../Image.png",
@@ -41,7 +41,7 @@ func TestName(t *testing.T) {
 
 func TestGlob(t *testing.T) {
 	// Data for testing.
-	var filenames = [...]string{
+	filenames := [...]string{
 		// Correct results (with *.png).
 		"Photo.png",
 		"Image.png",
@@ -79,7 +79,7 @@ func TestGlob(t *testing.T) {
 
 func TestPattern(t *testing.T) {
 	// Data for testing.
-	var filenames = [...]string{
+	filenames := [...]string{
 		// Correct results (with info-[a-z]{3}).
 		"info-abc",
 		"info-xyz",
