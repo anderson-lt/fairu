@@ -1,0 +1,59 @@
+# Configuration of linters.
+
+run:
+  modules-download-mode: mod
+  timeout: 1m
+
+output:
+  sort-results: true
+
+linters:
+  disable:
+    # Deprecated linters.
+    - exhaustivestruct
+    - golint
+    - interfacer
+    - maligned
+    - scopelint
+    # Incompatible linters.
+    - bodyclose
+    - contextcheck
+    - nilerr
+    - noctx
+    - rowserrcheck
+    - sqlclosecheck
+    - structcheck
+    - tparallel
+    - unparam
+    - wastedassign
+    # Conflicts.
+    - gofmt
+    - nlreturn
+    # With errors.
+    - typecheck
+    # Unnecessary.
+    - cyclop # I use gocyclo.
+    - wsl # Is very strict, I prefer gofumpt.
+
+  enable:
+    - gocyclo
+    - gofumpt
+    - gomnd
+    - staticcheck
+    - tenv
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  gofumpt:
+    extra-rules: true
+    lang-version: 1.18
+  gomnd:
+    ignored-numbers:
+      - "2"
+      - "3"
+      - "10"
+  staticcheck:
+    checks: ["all"]
+  tenv:
+    all: true

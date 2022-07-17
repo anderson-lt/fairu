@@ -55,7 +55,9 @@ ignora el archivo.
 
 Un filtro se compone de una clave de diccionario YAML indicando el filtro a
 usar, opcionalmente los filtros pueden tener una versión negada, la cual se 
-utiliza al añadir un caracter `!` al final del nombre.
+utiliza al añadir un carácter `!` al final del nombre, en la versión negada el
+filtro rechazará lo que acepta en su versión normal y aceptará lo que rechaza
+en su versión normal.
 
 == Por nombre
 
@@ -63,8 +65,7 @@ Estos filtros se basan únicamente en el nombre del archivo:
 
 Name::
 Este filtro aceptará todos los archivos que contengan el nombre
-especificado, también acepta una versión negada, en cuyo caso *no* dejará
-pasar a los archivos que contengan el nombre indicado.
+especificado.
 +
 .Sintaxis de `Name`.
 ----
@@ -79,7 +80,6 @@ Name: [Archivo1, Archivo2]
 Glob::
 Este filtro aceptará todos los archivos que coincidan con los «Unix Shell
 Glob» proveídos.
-Su versión negada rechazará los archivos coincidentes.
 
 Pattern::
 Similar a `Glob`, pero acepta una expresión regular.
@@ -87,28 +87,58 @@ Similar a `Glob`, pero acepta una expresión regular.
 == Por tipo
 
 Type::
-Este filtro acepta todos los archivos que sean del hipo especificado.
-Su versión negada rechazará todos los archivos del hipo especificado.
+Este filtro acepta todos los archivos que sean del tipo especificado.
 
 Identifier::
 Este filtro acepta todos los archivos que tengan los «números mágicos»
 especificados.
-Su versión negada hará lo contrario.
 
 == Por tamaño
 
 Size::
 Este filtro aceptará todos los archivos que tengan el mismo tamaño
 especificado, o uno mayor.
-Cuando es negado, aceptará los archivos que tengan un peso menor.
 
 Consumes::
 Este filtro acepta exactamente dos argumentos, ambos refiriéndose a tamaño de
 archivo, esto es para especificar un rango de tamaño (inclusive), para aceptar
 archivos.
-Su versión negada, aceptará los archivos que no estén en el rango de peso.
 
 === Lista de acciones
+
+Las acciones son operaciones que se ejecutan una vez todos los filtros son
+pasados. Las acciones aceptan una versión alternativa que se activa al añadir
+un carácter `!` al final del nombre.
+
+==== Acciones de registro
+
+Las acciones de registro le permiten llevar un registro de todo lo que hace
+_Fairú_ y ayudarle en labores de depuración.
+
+Todas las acciones de registro aceptan una sintaxis especial (conocida como
+sintaxis de shell), que le permite añadir información adicional de las
+variables de entorno:
+
+----
+$Variable # <- Imprime el valor de la variable de entorno Variable.
+$$Variable # <- Imprime literalmente $Variable.
+$VariableQueNoExiste # No imprime nada.
+----
+
+Print::
+Imprime sus argumentos en la salida estándar separados pon un espacio y añade
+un salto de línea al final.
+
+Write::
+Imprime sus argumentos en la salida estándar, estos se imprimen uno después
+del otro y no se imprime ningún salto de línea.
+
+Report::
+Como `Print`, pero, imprime en la salida de error estándar.
+
+Error::
+Como `Write`, pero, imprime en la salida de error estándar.
+
 // TODO(anderson-lt): Añadir formato.
 //Copy # Copia lo que sea.
 //CopyDir
@@ -135,11 +165,6 @@ Su versión negada, aceptará los archivos que no estén en el rango de peso.
 //  True:
 //  False!:
 //
-//# Registro.
-//Print: Hola Mundo # go's: fmt.Println
-//Write: Hola Mundo # go's: fmt.Print
-//Report: # go's: log.Println
-//Error: # go's: log.Print
 //
 //# Salida (requiere código).
 //Return: normal
@@ -149,7 +174,7 @@ Su versión negada, aceptará los archivos que no estén en el rango de peso.
 //Shell: command args
 //System: raw shell
 //
-//# Funcohes.
+//# Funciones.
 //Function: # Practicamente puedes añadir lo que deses aqui.
 //  - Basura
 //  - &MyFunc MyFunc:  # La idea es añadir referencias YAML aquí.

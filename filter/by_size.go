@@ -15,6 +15,18 @@ import (
 //  20 KiB
 var sizeRegexp = regexp.MustCompile(`^(\d+)\s?([A-Za-z]*)$`)
 
+const (
+	kb = 1000
+	mb = kb * 1000
+	gb = mb * 1000
+	tb = gb * 1000
+
+	kib = 1024
+	mib = kib * 1024
+	gib = mib * 1024
+	tib = gib * 1024
+)
+
 // Size filter files that are smaller than the specified size.
 func Size(path string, args []string) bool {
 	if len(args) != 1 {
@@ -58,7 +70,7 @@ func Consumes(path string, args []string) bool {
 		return false
 	}
 
-    // minSize <= st.Size() <= maxSize
+	// minSize <= st.Size() <= maxSize
 	return st.Size() >= minSize && st.Size() <= maxSize
 }
 
@@ -82,21 +94,21 @@ func parseSize(size string) (int64, error) {
 		case "B", "":
 			// Do not do anything, this is the unity by default.
 		case "KB":
-			sizeInBytes *= 1000
+			sizeInBytes *= kb
 		case "KiB":
-			sizeInBytes *= 1024
+			sizeInBytes *= kib
 		case "MB":
-			sizeInBytes *= 1000 * 1000
+			sizeInBytes *= mb
 		case "MiB":
-			sizeInBytes *= 1024 * 1024
+			sizeInBytes *= mib
 		case "GB":
-			sizeInBytes *= 1000 * 1000 * 1000
+			sizeInBytes *= gb
 		case "GiB":
-			sizeInBytes *= 1024 * 1024 * 1024
+			sizeInBytes *= gib
 		case "TB":
-			sizeInBytes *= 1000 * 1000 * 1000 * 1000
+			sizeInBytes *= tb
 		case "TiB":
-			sizeInBytes *= 1024 * 1024 * 1024 * 1024
+			sizeInBytes *= tib
 		default:
 			return 0, errors.New("Invalid unit " + sizes[2])
 		}
