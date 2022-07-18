@@ -1,4 +1,5 @@
 = Archivo de configuración de Fairú
+:toc:
 
 Este documento describe la estructura del archivo de configuración de Fairú.
 
@@ -51,7 +52,7 @@ su filtro, se intenta con el _Grupo 3_ de la misma forma que los anteriores;
 si se llega al final de todos los grupos sin pasar los filtros necesarios, se
 ignora el archivo.
 
-=== Lista de filtros
+== Lista de filtros
 
 Un filtro se compone de una clave de diccionario YAML indicando el filtro a
 usar, opcionalmente los filtros pueden tener una versión negada, la cual se 
@@ -59,7 +60,7 @@ utiliza al añadir un carácter `!` al final del nombre, en la versión negada e
 filtro rechazará lo que acepta en su versión normal y aceptará lo que rechaza
 en su versión normal.
 
-== Por nombre
+=== Por nombre
 
 Estos filtros se basan únicamente en el nombre del archivo:
 
@@ -84,7 +85,7 @@ Glob» proveídos.
 Pattern::
 Similar a `Glob`, pero acepta una expresión regular.
 
-== Por tipo
+=== Por tipo
 
 Type::
 Este filtro acepta todos los archivos que sean del tipo especificado.
@@ -93,7 +94,7 @@ Identifier::
 Este filtro acepta todos los archivos que tengan los «números mágicos»
 especificados.
 
-== Por tamaño
+=== Por tamaño
 
 Size::
 Este filtro aceptará todos los archivos que tengan el mismo tamaño
@@ -104,13 +105,13 @@ Este filtro acepta exactamente dos argumentos, ambos refiriéndose a tamaño de
 archivo, esto es para especificar un rango de tamaño (inclusive), para aceptar
 archivos.
 
-=== Lista de acciones
+== Lista de acciones
 
 Las acciones son operaciones que se ejecutan una vez todos los filtros son
 pasados. Las acciones aceptan una versión alternativa que se activa al añadir
 un carácter `!` al final del nombre.
 
-==== Acciones de registro
+=== Acciones de registro
 
 Las acciones de registro le permiten llevar un registro de todo lo que hace
 _Fairú_ y ayudarle en labores de depuración.
@@ -192,9 +193,30 @@ Como `Write`, pero, imprime en la salida de error estándar.
 //    Recurse!: int # Si es menor, fallar.
 //
 //
-//
-//Operation Title:
-//  - Type: python
-//  - Glob!: '*.py'
-//  - Delete:
-//  - Call: *ref # Ejemplo de call.
+
+== Archivo de configuración
+
+El archivo de configuración tiene un mapa con las reglas para la organización
+y otro para las opciones del programa.
+
+.Archivo de configuración de ejemplo.
+[source,yaml]
+----
+Rules:
+  "Remove Backups":
+    Type: regular file
+    Glob: ".*~"
+    DeleteFile:
+  "Show Big Files":
+    Type: regular file
+    Size: 50MB
+    Print: $Path
+
+Options:
+  ReadSymlinks: false
+----
+
+=== Ruta de guardado
+
+El archivo debe ser guardado en el directorio de configuración del usuario, en
+el directorio `fairu`, en el archivo `config.yaml`.

@@ -1,0 +1,17 @@
+# Fairú configuration file.
+
+Rules:
+  "Show Hidden Files":
+    Type: regular file
+    Glob: '.*'
+    Print: "Hidden file: $ShortPath"
+  "Show Big Files":
+    Type: regular file
+    Size: 50MB
+    Print: "File is very big: $BaseName"
+  "Directories With Extension":
+    Type: directory
+    Print: "Directory has extension: $Extension"
+
+Options:
+  # There is not options yet.
