@@ -50,7 +50,7 @@ func expandEnviron(path, text string) string {
 	// Set dynamic variables.
 	os.Setenv("Path", absPath)
 	os.Setenv("BaseName", filepath.Base(path))
-	os.Setenv("Extension", strings.ToUpper(filepath.Ext(path)[1:]))
+	os.Setenv("Extension", strings.ToUpper(strings.TrimPrefix(filepath.Ext(path), ".")))
 	os.Setenv("ShellPath", toShellPath(path))
 	os.Setenv("ShortPath", toShortPath(path))
 

@@ -16,7 +16,7 @@ func TestRule(t *testing.T) {
 		},
 	}
 
-	if !Data.Filter("/home/gopher/Example") {
+	if !Data.Accept("/home/gopher/Example") {
 		t.Error("the filter must be passed")
 	}
 }

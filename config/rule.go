@@ -12,8 +12,8 @@ type Rule struct {
 	Actions []Action
 }
 
-// Filter apply all the filters with your arguments on the specified path.
-func (r Rule) Filter(path string) bool {
+// Accept apply all the filters with your arguments on the specified path.
+func (r Rule) Accept(path string) bool {
 	for _, f := range r.Filters {
 		if !f.Call(path) {
 			return false
