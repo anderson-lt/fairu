@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 // Package action contains the type Action and some basic actions.
 //
 // The actions are functions that act on the file system (although they do not

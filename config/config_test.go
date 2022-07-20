@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 package config_test
 
 import (

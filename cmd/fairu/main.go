@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 package main
 
 import (
@@ -61,15 +63,18 @@ func applyRules(root string, config *config.Config) {
 func loadConfig() *config.Config {
 	conf, err := config.Load()
 	var perr *fs.PathError
-	if errors.Is(err, fs.ErrNotExist) && errors.As(err, &perr) {
+	switch {
+	case errors.Is(err, fs.ErrNotExist) && errors.As(err, &perr):
 		log.Fatal("Non-existent configuration file:\n", perr.Path)
-	} else if err == io.EOF {
+
+	case err == io.EOF:
 		path, err := config.GetConfigFile()
 		if err != nil {
 			panic("Unexpected error: " + err.Error())
 		}
 		log.Fatal("Empty configuration file:\n", path)
-	} else if err != nil {
+
+	case err != nil:
 		log.Fatalln("Fatal error:", err)
 	}
 

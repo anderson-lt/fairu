@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 package config
 
 import "github.com/anderson-lt/fairu/action"

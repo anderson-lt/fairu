@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 // Package filter contains filters for the filesystem.
 //
 // All exported and first-class functions defined here are filters.

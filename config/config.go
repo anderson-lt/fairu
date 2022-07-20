@@ -1,3 +1,6 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
+// Package config provides access to Fairu configuration file.
 package config
 
 import (
@@ -24,7 +27,7 @@ func Load() (*Config, error) {
 
 	file, err := os.Open(configPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error to open configuration file: %w", err)
 	}
 	defer file.Close()
 
@@ -42,9 +45,8 @@ func ReadConfig(r io.Reader) (*Config, error) {
 	decoder.KnownFields(true)
 
 	var config Config
-	err := decoder.Decode(&config)
-	if err != nil {
-		return nil, err
+	if err := decoder.Decode(&config); err != nil {
+		return nil, fmt.Errorf("error reading the configuration file: %w", err)
 	}
 
 	return &config, nil
@@ -64,7 +66,7 @@ func GetConfigFile() (string, error) {
 	// Try get the user configuration directory.
 	configDir, err := os.UserConfigDir()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("unable to find the configuration directory: %w", err)
 	}
 
 	return filepath.Join(configDir, "fairu", "config.yaml"), nil

@@ -8,41 +8,72 @@ output:
   sort-results: true
 
 linters:
-  disable:
-    # Deprecated linters.
-    - exhaustivestruct
-    - golint
-    - interfacer
-    - maligned
-    - scopelint
-    # Incompatible linters.
-    - bodyclose
-    - contextcheck
-    - nilerr
-    - noctx
-    - rowserrcheck
-    - sqlclosecheck
-    - structcheck
-    - tparallel
-    - unparam
-    - wastedassign
-    # Conflicts.
-    - gofmt
-    - nlreturn
-    # With errors.
-    - typecheck
-    # Unnecessary.
-    - cyclop # I use gocyclo.
-    - wsl # Is very strict, I prefer gofumpt.
-
   enable:
+    - asciicheck
+    - deadcode
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - durationcheck
+    - errname
+    - errorlint
+    - execinquery
+    - exhaustive
+    - exhaustruct
+    - exportloopref
+    - forcetypeassert
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
     - gocyclo
+    - godot
+    - godox
+    - goerr113
     - gofumpt
+    - goheader
     - gomnd
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - govet
+    - grouper
+    - ifshort
+    - importas
+    - ineffassign
+    - ireturn
+    - lll
+    - maintidx
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nilnil
+    - nolintlint
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
     - staticcheck
+    - stylecheck
     - tenv
+    - thelper
+    - unconvert
+    - unused
+    - varcheck
+    - varnamelen
+    - whitespace
+    - wrapcheck
 
 linters-settings:
+  exhaustruct:
+    exclude:
+      - 'config\.Rule'
   gocyclo:
     min-complexity: 15
   gofumpt:

@@ -1,3 +1,5 @@
+// Copyright (C) 2022, Anderson Lizarazo Tellez
+
 package config
 
 import (
@@ -5,6 +7,12 @@ import (
 	"fmt"
 
 	"gopkg.in/yaml.v3"
+)
+
+// Errors when reading the configuration.
+var (
+	ErrInvalidConfigStructure = errors.New("invalid structure of the configuration file")
+	ErrInvalidConfigValue     = errors.New("invalid value in the configuration file")
 )
 
 // The YAML package used has a very peculiar way to represent the maps. These
@@ -19,7 +27,7 @@ type Rules []Rule
 func (r *Rules) UnmarshalYAML(node *yaml.Node) error {
 	// I need a map type.
 	if node.Kind != yaml.MappingNode {
-		return errors.New("invalid structure of the document")
+		return ErrInvalidConfigStructure
 	}
 
 	rules := make([]Rule, 0, len(node.Content)/2)
@@ -27,7 +35,7 @@ func (r *Rules) UnmarshalYAML(node *yaml.Node) error {
 		var name string
 		err := node.Content[key].Decode(&name)
 		if err != nil {
-			return errors.New("the names of the rules must be strings")
+			return fmt.Errorf("%w: a string was expected", ErrInvalidConfigValue)
 		}
 
 		rule := Rule{Name: name}
@@ -51,7 +59,7 @@ func (r *Rule) UnmarshalYAML(node *yaml.Node) error {
 	// order of the elements, therefore we have to do it ourselves to preserve
 	// the order.
 	if node.Kind != yaml.MappingNode {
-		return errors.New("invalid structure of the document")
+		return ErrInvalidConfigStructure
 	}
 
 	// Get filters and actions.
@@ -78,7 +86,7 @@ func decodeRule(node *yaml.Node) ([]Filter, []Action, error) {
 		var name string
 		err := node.Content[key].Decode(&name)
 		if err != nil {
-			return nil, nil, errors.New("filter and actions names must be strings")
+			return nil, nil, fmt.Errorf("%w: filter and actions names must be strings", ErrInvalidConfigValue)
 		}
 
 		// Get arguments.
@@ -94,7 +102,7 @@ func decodeRule(node *yaml.Node) ([]Filter, []Action, error) {
 			// Verify that the filter is not out of place, that is, it appears
 			// after it is defined after an action.
 			if decodedFilters {
-				return nil, nil, errors.New("filter is out of place: " + name)
+				return nil, nil, fmt.Errorf("%w: filter %s is out of place", ErrInvalidConfigStructure, name)
 			}
 
 			// Add filter to the list.
@@ -115,7 +123,7 @@ func decodeRule(node *yaml.Node) ([]Filter, []Action, error) {
 
 		// If we reach this point it means that the given name is not filter
 		// or action.
-		return nil, nil, errors.New("unknown name: " + name)
+		return nil, nil, fmt.Errorf("%w: unknown filter or action %s", ErrInvalidConfigValue, name)
 	}
 
 	return filters, actions, nil
@@ -131,7 +139,7 @@ func getArguments(node *yaml.Node) ([]string, error) {
 		var arg string
 		err := node.Decode(&arg)
 		if err != nil {
-			return nil, errors.New("the arguments must be strings")
+			return nil, fmt.Errorf("%w: the arguments must be strings", ErrInvalidConfigValue)
 		}
 		return []string{arg}, nil
 	case yaml.SequenceNode:
@@ -142,6 +150,6 @@ func getArguments(node *yaml.Node) ([]string, error) {
 		}
 		return args, nil
 	default:
-		return nil, errors.New("unknown argument type")
+		return nil, fmt.Errorf("%w: unknown argument type", ErrInvalidConfigValue)
 	}
 }
