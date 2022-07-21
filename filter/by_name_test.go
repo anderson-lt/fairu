@@ -2,7 +2,16 @@
 
 package filter
 
-import "testing"
+import (
+	"bytes"
+	"log"
+	"testing"
+)
+
+func init() {
+	// Change the logger output to avoid staining the tests.
+	log.SetOutput(new(bytes.Buffer))
+}
 
 func TestName(t *testing.T) {
 	// Data for testing.
@@ -41,6 +50,43 @@ func TestName(t *testing.T) {
 	}
 }
 
+func TestNameMultiple(t *testing.T) {
+	valid := map[string][]string{
+		"go":           {"go", "go", "go"},
+		"/home/gopher": {"house", "go", "gopher"},
+		"../blue":      {"red", "yellow", "blue"},
+	}
+
+	invalid := map[string][]string{
+		"other":  {"another", "file"},
+		"/dir":   {"gopher", "blue"},
+		"./code": {"red", "blue", "green"},
+	}
+
+	// Test valid.
+	for path, names := range valid {
+		if !Name(path, names) {
+			t.Log("Path:", path)
+			t.Log("Names:", names)
+			t.Error("The path must be accepted")
+		}
+	}
+
+	// Test invalid.
+	for path, names := range invalid {
+		if Name(path, names) {
+			t.Log("Path:", path)
+			t.Log("Names:", names)
+			t.Error("The path must be not accepted")
+		}
+	}
+
+	// Test invalid argument length.
+	if Name("nil", []string{}) {
+		t.Error("The filter must be not accept 0 arguments")
+	}
+}
+
 func TestGlob(t *testing.T) {
 	// Data for testing.
 	filenames := [...]string{
@@ -75,6 +121,53 @@ func TestGlob(t *testing.T) {
 			t.Logf("Correct (%d): %s", i, filenames[i])
 			t.Logf("I got (Result %d): %s", i, results[i])
 			t.Error("The result is incorrect.")
+		}
+	}
+}
+
+func TestGlobHidden(t *testing.T) {
+	hidden := [...]string{
+		".hidden",
+		"/path/any/no/visible/.file",
+		"../hidden/.any",
+		"../.gopher",
+	}
+
+	normal := [...]string{
+		"visible",
+		"/root/of/path",
+		"../myfile",
+	}
+
+	// Test hidden files.
+	t.Log("Using the glob .*")
+	for _, file := range hidden {
+		if !Glob(file, []string{".*"}) {
+			t.Log("File:", file)
+			t.Error("The file should pass the filter")
+		}
+	}
+
+	// Test normal files.
+	t.Log("Using the glob .*")
+	for _, file := range normal {
+		if Glob(file, []string{".*"}) {
+			t.Log("File:", file)
+			t.Error("The file should pass the filter")
+		}
+	}
+}
+
+func TestGlobInvalid(t *testing.T) {
+	invalid := [...]string{
+		"][",
+		"[",
+	}
+
+	for _, glob := range invalid {
+		if Glob("invalid-glob", []string{glob}) {
+			t.Log("Glob used:", glob)
+			t.Error("The glob should not have been accepted")
 		}
 	}
 }

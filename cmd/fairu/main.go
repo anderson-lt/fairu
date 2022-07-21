@@ -3,10 +3,8 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
-	"io"
 	"io/fs"
 	"log"
 	"os"
@@ -18,17 +16,23 @@ import (
 func main() {
 	// Parse arguments.
 	showVersion := flag.Bool("version", false, "Print information about the version.")
+	editConf := flag.Bool("edit-config", false, "Execute an text editor in the configuration file.")
 	flag.Parse()
-
-	if *showVersion {
-		fmt.Println("Fairu 0.1.0 (Preview)")
-		fmt.Println("Copyright (C) 2022, Anderson Lizarazo Tellez")
-		return
-	}
 
 	// Configure logging.
 	log.SetFlags(0)
 	log.SetPrefix("Fairu: ")
+
+	switch {
+	case *showVersion:
+		fmt.Println("Fairu 0.1.0 (Preview)")
+		fmt.Println("Copyright (C) 2022, Anderson Lizarazo Tellez")
+		return
+
+	case *editConf:
+		editConfig()
+		return
+	}
 
 	// Execute rules.
 	root, err := os.Getwd()
@@ -58,25 +62,4 @@ func applyRules(root string, config *config.Config) {
 	if err := filepath.WalkDir(root, walkFunc); err != nil {
 		panic("Unexpected error: " + err.Error())
 	}
-}
-
-func loadConfig() *config.Config {
-	conf, err := config.Load()
-	var perr *fs.PathError
-	switch {
-	case errors.Is(err, fs.ErrNotExist) && errors.As(err, &perr):
-		log.Fatal("Non-existent configuration file:\n", perr.Path)
-
-	case err == io.EOF:
-		path, err := config.GetConfigFile()
-		if err != nil {
-			panic("Unexpected error: " + err.Error())
-		}
-		log.Fatal("Empty configuration file:\n", path)
-
-	case err != nil:
-		log.Fatalln("Fatal error:", err)
-	}
-
-	return conf
 }
