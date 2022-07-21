@@ -10,6 +10,18 @@ import (
 )
 
 // Name filter files that do not have any name of the filter's arguments.
+// For a route to pass the filter, it must end at least one of the names
+// provided, for example:
+//  Name(path, []string{"Img/Go"})
+// It will return true if `path` is one of:
+//  - /home/gopher/Img/Go
+//  - /Img/Go
+//  - Img/Go
+// But, will be false if it is one of:
+//  - MyImg/Go
+//  - Go
+//  - Img
+//
 // This requires at least an argument.
 func Name(path string, args []string) bool {
 	if len(args) < 1 {
@@ -17,21 +29,42 @@ func Name(path string, args []string) bool {
 		return false
 	}
 
-	path = filepath.Base(path)
+	path = filepath.Clean(path)
+VerifyPaths:
 	for _, name := range args {
-		if path == name {
-			return true
+		// Separate each name from the route.
+		path := strings.Split(path, "/")
+		name := strings.Split(name, "/")
+
+		// The number of names to compare must be the same.
+		if len(path) > len(name) {
+			// Take the last `len(name)` elements.
+			path = path[len(path)-len(name):]
 		}
+
+		// Verify that each name matches.
+		for i := 0; i < len(name); i++ {
+			if path[i] != name[i] {
+				// If it does not match, try with the following.
+				continue VerifyPaths
+			}
+		}
+		return true
 	}
 
 	return false
 }
 
 // Glob filter files that do not match the specified Unix Shell Glob.
+// In the current implementation, the `*` character also coincides with `.`
+// (dot). If the Glob provided does not contain the `/` character, only the
+// last element of the route provided will be evaluated. In the opposite case,
+// the entire route will be evaluated.
+//
 // This filter takes exactly one argument.
 func Glob(path string, args []string) bool {
 	if len(args) != 1 {
-		log.Print("Pattern: It takes exactly an argument.")
+		log.Print("Glob: It takes exactly an argument.")
 		return false
 	}
 
@@ -65,7 +98,7 @@ func Pattern(path string, args []string) bool {
 
 	matched, err := regexp.MatchString(args[0], path)
 	if err != nil {
-		log.Println("Pattern: Invalid pattern:", err)
+		log.Println("Pattern: Invalid Pattern:", err)
 		return false
 	}
 

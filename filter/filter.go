@@ -20,7 +20,6 @@
 // That is, it is only necessary that it matches an argument.
 //
 // The filters with which this rule applies is:
-//  - Glob
 //  - Identifier
 //  - Name
 //  - Type

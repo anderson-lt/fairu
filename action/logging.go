@@ -40,6 +40,32 @@ func Write(path string, args []string) string {
 	return path
 }
 
+// Report is similar to Print, but, write on the standard error output.
+func Report(path string, args []string) string {
+	text := make([]any, len(args))
+	for index, arg := range args {
+		text[index] = expandEnviron(path, arg)
+	}
+
+	fmt.Fprintln(os.Stderr, text...)
+
+	// Avoid modification of the route.
+	return path
+}
+
+// Error is similar to Write, but, write on the standard error output.
+func Error(path string, args []string) string {
+	text := make([]any, len(args))
+	for index, arg := range args {
+		text[index] = expandEnviron(path, arg)
+	}
+
+	fmt.Fprintln(os.Stderr, text...)
+
+	// Avoid modification of the route.
+	return path
+}
+
 func expandEnviron(path, text string) string {
 	// Get absolute path.
 	absPath, err := filepath.Abs(path)

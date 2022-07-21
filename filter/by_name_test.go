@@ -21,6 +21,7 @@ func TestName(t *testing.T) {
 		"../Image.png",
 		"/home/user/Image.png",
 		// Incorrect results.
+		"MyImage.png",
 		"Image1.png",
 		"Image2.png",
 	}
@@ -47,6 +48,15 @@ func TestName(t *testing.T) {
 			t.Logf("I got (Result %d): %s", i, results[i])
 			t.Error("The result is incorrect.")
 		}
+	}
+
+	// Test names as path.
+	if Name("/gopher/blue/and/simple/", []string{"lue/and/simple"}) {
+		t.Error("This should not accept the path.")
+	}
+
+	if !Name("gopher/blue/and/simple", []string{"and/simple"}) {
+		t.Error("This should accept the path.")
 	}
 }
 
@@ -122,6 +132,12 @@ func TestGlob(t *testing.T) {
 			t.Logf("I got (Result %d): %s", i, results[i])
 			t.Error("The result is incorrect.")
 		}
+	}
+}
+
+func TestGlobMultiple(t *testing.T) {
+	if Glob("invalid-args", []string{"arg1", "arg2"}) {
+		t.Error("Glob should not accept more than one argument ")
 	}
 }
 
@@ -208,5 +224,21 @@ func TestPattern(t *testing.T) {
 			t.Logf("I got (Result %d): %s", i, results[i])
 			t.Error("The result is incorrect.")
 		}
+	}
+}
+
+func TestPatternMultiple(t *testing.T) {
+	if Pattern("invalid-arguments", []string{}) {
+		t.Error("Pattern should accept an argument exactly.")
+	}
+
+	if Pattern("invalid-arguments", []string{"arg1", "arg2"}) {
+		t.Error("Pattern should accept an argument exactly.")
+	}
+}
+
+func TestPatternInvalid(t *testing.T) {
+	if Pattern("invalid-pattern", []string{`][`}) {
+		t.Error("Regular expression should not have been accepted.")
 	}
 }
