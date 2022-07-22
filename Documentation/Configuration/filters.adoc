@@ -1,0 +1,29 @@
+
+== Filters
+
+=== By Name
+
+==== Name
+It coincides with the names given or its final part.
+
+.Filter `Name`
+====
+The instruction: `Name: ["Gopher", "home/blue"]` matches with:
+
+* `Gopher`                   -> `Gopher`
+* `home/blue`                -> `home/blue`
+* `hello/Gopher`             -> `Gopher`
+* `home/blue/Gopher`         -> `Gopher`
+* `chroot/environ/home/blue` -> `home/blue`
+
+But, not with:
+
+* `MyGopher`
+* `home/blue/color`
+* `home/color/blue`
+* `Gopher/Blue`
+* `pher/home/blu`
+====
+
+==== Glob
+// TODO: Add description.

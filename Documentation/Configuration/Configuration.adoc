@@ -1,0 +1,5 @@
+= Configuration
+:toc:
+
+// Filters
+include::filters.adoc[]

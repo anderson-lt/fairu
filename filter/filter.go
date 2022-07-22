@@ -31,3 +31,9 @@ package filter
 // existing file, and args are the filter arguments. And passed is a boolean
 // that indicates if the file passed the filter.
 type Filter func(path string, args []string) (passed bool)
+
+func Negate(filter Filter) Filter {
+    return func(path string, args []string) bool {
+        return !filter(path, args)
+    }
+}

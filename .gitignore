@@ -1,3 +1,6 @@
 
 # Document drafts.
 /Documentation/draft/
+
+# HTML files (AsciiDoctor Output).
+*.html

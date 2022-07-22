@@ -4,7 +4,7 @@
 == 0.2.0
 
 * [ ] Implement filter `Type`.
-* [ ] Add negated filters.
+* [x] Add negated filters.
 * [ ] Add variables.
 
 * [x] Add actions:
