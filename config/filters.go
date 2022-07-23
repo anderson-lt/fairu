@@ -11,24 +11,24 @@ import (
 // getFilter contains all filters available. It returns nil if the filter is
 // non-existent.
 func getFilter(name string) filter.Filter {
-    // Verify if it is a negated filter.
-    var negated bool
-    if strings.HasSuffix(name, "!") && len(name) > 1 {
-        name = name[:len(name)-1]
-        negated = true
-    }
+	// Verify if it is a negated filter.
+	var negated bool
+	if strings.HasSuffix(name, "!") && len(name) > 1 {
+		name = name[:len(name)-1]
+		negated = true
+	}
 
-    filterFunc := getFilterName(name)
-    if filterFunc == nil {
-        return nil
-    }
+	filterFunc := getFilterName(name)
+	if filterFunc == nil {
+		return nil
+	}
 
-    // Denying the filter, if the negated version was requested.
-    if negated {
-        return filter.Negate(filterFunc)
-    }
+	// Denying the filter, if the negated version was requested.
+	if negated {
+		return filter.Negate(filterFunc)
+	}
 
-    return filterFunc
+	return filterFunc
 }
 
 func getFilterName(name string) filter.Filter {

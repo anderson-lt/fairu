@@ -3,7 +3,7 @@
 
 == 0.2.0
 
-* [ ] Implement filter `Type`.
+* [x] Implement filter `Type`.
 * [x] Add negated filters.
 * [ ] Add variables.
 

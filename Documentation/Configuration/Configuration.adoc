@@ -1,5 +1,10 @@
 = Configuration
+Anderson Lizarazo Tellez <andersonlizarazo27@gmail.com>
+v0.1.0-Incomplete, 2022-07-22
 :toc:
+
+This document describes in detail the configuration file of the `fairu`
+program.
 
 // Filters
 include::filters.adoc[]

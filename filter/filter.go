@@ -33,7 +33,7 @@ package filter
 type Filter func(path string, args []string) (passed bool)
 
 func Negate(filter Filter) Filter {
-    return func(path string, args []string) bool {
-        return !filter(path, args)
-    }
+	return func(path string, args []string) bool {
+		return !filter(path, args)
+	}
 }

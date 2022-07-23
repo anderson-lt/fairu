@@ -12,10 +12,10 @@ func getAction(name string) action.Action {
 		return action.Print
 	case "Write":
 		return action.Write
-    case "Report":
-        return action.Report
-    case "Error":
-        return action.Error
+	case "Report":
+		return action.Report
+	case "Error":
+		return action.Error
 	}
 
 	return nil
